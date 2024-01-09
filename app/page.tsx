@@ -3,15 +3,26 @@ import Link from 'next/link'
 import { ProductCard } from './components/ProductCard/ProductCard'
 import { Counter } from './components/Counter/Counter';
 import { AddUser } from './components/AddUser/AddUser';
+import  Sidebar  from './components/Sidebar/Sidebar';
+import { GraphContainer } from './components/GraphDemo/GraphContainer';
 
 export default function Home() {
+
   return (
     <main>
-      <h1>Hello World</h1>
-      <Link href="/users">Users</Link>   
-      <ProductCard/>
-      <Counter/>
-      <AddUser/>
+      <div className="flex items-stretch bg-grey-lighter min-h-screen">
+        <div className="bg-slate-600  px-2 flex ">
+          <Sidebar/>
+        </div>
+        <div className="pl-2">
+          <Link href="/users">Users</Link>   
+          <ProductCard/>
+          <Counter/>
+          <AddUser/>
+          <GraphContainer/>
+        </div>
+      </div>
+    
     </main>
   )
 }
