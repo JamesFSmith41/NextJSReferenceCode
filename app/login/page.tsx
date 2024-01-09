@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const LoginPage = () => {
+const LoginPage = () => {
   return (
     <main>
         <div className="flex items-center justify-center md:h-screen">
@@ -16,3 +16,5 @@ export const LoginPage = () => {
     </main>
   )
 }
+
+export default LoginPage;
