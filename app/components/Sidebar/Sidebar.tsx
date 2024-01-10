@@ -1,5 +1,5 @@
-'use client'
 import Link from 'next/link'
+import { signOut } from '@/auth';
 
 const Sidebar = () => {
 
@@ -16,9 +16,16 @@ const Sidebar = () => {
             <Link href="/users" className="border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
                 User Profile
             </Link>
-            <Link href="/login" className="border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
-                Logout
-            </Link>
+            <form className=''
+                action={async () => {
+                    'use server';
+                    await signOut();
+                }}
+                >
+                <button className="min-w-full border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
+                    Logout
+                </button>
+            </form>
         </div>
     </div>
   )

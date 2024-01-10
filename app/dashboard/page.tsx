@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ProductCard } from './components/ProductCard/ProductCard'
-import { Counter } from './components/Counter/Counter';
-import { AddUser } from './components/AddUser/AddUser';
-import  Sidebar  from './components/Sidebar/Sidebar';
-import { GraphContainer } from './components/GraphDemo/GraphContainer';
+import { ProductCard } from '../components/ProductCard/ProductCard'
+import { Counter } from '../components/Counter/Counter';
+import { AddUser } from '../components/AddUser/AddUser';
+import  Sidebar  from '../components/Sidebar/Sidebar';
+import { GraphContainer } from '../components/GraphDemo/GraphContainer';
 
-export default function Home() {
+export default function Dashboard() {
 
   return (
     <main>

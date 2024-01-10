@@ -4,13 +4,10 @@
  import { authenticate } from "@/app/lib/action"
  import React from 'react'
 
- function test() {
-    console.log()
- }
+ 
  export default function LoginForm() {
 
     const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-
    return (
      <form action={dispatch} >
         <div className="flex flex-col bg-slate-500 justify-center items-center rounded-md"> 

@@ -4,7 +4,7 @@ import { authConfig } from './auth.config';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
-var CryptoJS = require("crypto-js");
+var bcrypt = require('bcryptjs');
 
 
 
@@ -32,11 +32,15 @@ export const { auth, signIn, signOut } = NextAuth({
           const user = await getUser(email);
           if (!user) return null;
 
-          const passwordsMatch = await CryptoJS.AES.decrypt(user.password, process.env.AUTH_SECRET).toString(CryptoJS.enc.Utf8) === password;
-          console.log(passwordsMatch)
+          const passwordsMatch = await bcrypt.compare(password, user.password);
+          console.log("line 36: " + passwordsMatch)
+          console.log("line 37: " + user.password)
+          console.log("line 38: " + password)
+
           if (passwordsMatch) return user;
 
         }
+        console.log("line 43: " + parsedCredentials)
         console.log('Invalid credentials');
         return null;
       },
