@@ -14,12 +14,12 @@ export default function Home() {
         <div className="bg-slate-600  px-2 flex ">
           <Sidebar/>
         </div>
-        <div className="pl-2">
+        <div className="pl-2" suppressHydrationWarning >
           <Link href="/users">Users</Link>   
           <ProductCard/>
           <Counter/>
           <AddUser/>
-          <GraphContainer/>
+          
         </div>
       </div>
     

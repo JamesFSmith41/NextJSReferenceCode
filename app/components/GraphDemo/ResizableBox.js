@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ResizableBox as ReactResizableBox } from "react-resizable";
 
@@ -12,7 +13,7 @@ export default function ResizableBox({
   className = "",
 }) {
   return (
-    <div style={{ marginLeft: 20 }}>
+    <div style={{ marginLeft: 20 }} >
       <div
         style={{
           display: "inline-block",

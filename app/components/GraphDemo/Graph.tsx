@@ -37,8 +37,8 @@ export default function Graph() {
         <button className="bg-slate-500"onClick={randomizeData}>Randomize Data</button>
         <br />
         <br />
-        <ResizableBox>
-          <Chart
+        <ResizableBox >
+          <Chart 
             options={{
               data,
               primaryAxis,

@@ -1,9 +1,7 @@
 'use client'
 import Link from 'next/link'
-import React, { useState } from "react";
 
 const Sidebar = () => {
-  const [effect, setEffect] = useState(false);
 
   return (
     <div className="p-1 m-1 h-90">
@@ -18,8 +16,8 @@ const Sidebar = () => {
             <Link href="/users" className="border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
                 User Profile
             </Link>
-            <Link href="/users" className="border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
-                User Profile
+            <Link href="/login" className="border-1 border-slate-300 rounded-md hover:bg-slate-500 p-1">
+                Logout
             </Link>
         </div>
     </div>
