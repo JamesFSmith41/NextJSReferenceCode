@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import type { User } from '@/app/lib/definitions';
 var bcrypt = require('bcryptjs');
+const { db } = require('@vercel/postgres');
 
 
 
@@ -19,12 +20,34 @@ async function getUser(email: string): Promise<User | undefined> {
   }
 }
  
+async function checkEmail(email: string) {
+  try {
+    const emailExists = await sql<User>`SELECT * FROM users WHERE email=${email} EXISTS`
+    console.log(emailExists);
+    return emailExists;
+  } catch (error) {
+    console.error("Error finding email", error);
+    throw new Error("Error finding email");
+  }
+}
+
+async function checkUser(username: string) {
+  try {
+    const userExists = await sql<User>`SELECT * FROM users WHERE name=${username} EXISTS`
+    console.log(userExists);
+    return userExists;
+  } catch (error) {
+    console.error("Error finding username", error);
+    throw new Error("Error finding username");
+  }
+}
+
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
+        const parsedCredentials = z 
           .object({ email: z.string().email(), password: z.string().min(6) })
           .safeParse(credentials);
         if (parsedCredentials.success) {
@@ -47,3 +70,28 @@ export const { auth, signIn, signOut } = NextAuth({
     }),
   ],
 });
+
+export async function userSignUp(credentials : FormData) {
+
+  const parsedCredentials = z 
+          .object({ username: z.string(), email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials)
+  if (parsedCredentials.success) {
+    const {username, email, password } = parsedCredentials.data;
+    const emailExists = await checkEmail(email);
+    const userExists = await checkUser(username);
+  
+    if (emailExists && userExists) {
+      const client = await db.connect();
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const hashedUsername = await bcrypt.hash(username, 10);
+  
+          return client.sql`
+          INSERT INTO users (id, name, email, password)
+          VALUES (${hashedUsername}, ${username}, ${email}, ${hashedPassword})
+          ON CONFLICT (id) DO NOTHING;
+        `;
+    }
+  }
+  
+}  
