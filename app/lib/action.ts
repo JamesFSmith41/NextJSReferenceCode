@@ -28,6 +28,7 @@ export async function signup(
   formData: FormData,
 ) {
   try {
+    console.log("signup")
     await userSignUp(formData);
   } catch (error) {
     if (error instanceof AuthError) {

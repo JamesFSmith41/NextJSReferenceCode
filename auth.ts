@@ -22,9 +22,11 @@ async function getUser(email: string): Promise<User | undefined> {
  
 async function checkEmail(email: string) {
   try {
-    const emailExists = await sql<User>`SELECT * FROM users WHERE email=${email} EXISTS`
-    console.log(emailExists);
-    return emailExists;
+    const emailExists = await sql<User>`SELECT 1 FROM users WHERE email=${email}`
+    if (emailExists != null) {
+      return false;
+    }
+    return true;
   } catch (error) {
     console.error("Error finding email", error);
     throw new Error("Error finding email");
@@ -33,9 +35,12 @@ async function checkEmail(email: string) {
 
 async function checkUser(username: string) {
   try {
-    const userExists = await sql<User>`SELECT * FROM users WHERE name=${username} EXISTS`
-    console.log(userExists);
-    return userExists;
+    const userExists = await sql<User>`SELECT 1 FROM users WHERE name=${username}`
+    if (userExists != null) {
+      return false;
+    }
+    return true;
+
   } catch (error) {
     console.error("Error finding username", error);
     throw new Error("Error finding username");
@@ -71,27 +76,42 @@ export const { auth, signIn, signOut } = NextAuth({
   ],
 });
 
-export async function userSignUp(credentials : FormData) {
+export async function userSignUp(formdata : FormData) {
 
-  const parsedCredentials = z 
-          .object({ username: z.string(), email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials)
-  if (parsedCredentials.success) {
-    const {username, email, password } = parsedCredentials.data;
-    const emailExists = await checkEmail(email);
-    const userExists = await checkUser(username);
+    const username = formdata.get("username")?.toString();
+    const email = formdata.get("email")?.toString();
+    const password = formdata.get("password")?.toString();
+    if (typeof email == 'string' && typeof username === 'string') {
+      console.log(email)
+      console.log(username)
+
+      const emailExists = await checkEmail(email);
+      const userExists = await checkUser(username);
+      console.log(emailExists);
+      console.log(userExists)
+      if (!emailExists && !userExists) {
+        const client = await db.connect();
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const hashedUsername = await bcrypt.hash(username, 10);
+            console.log(username);
+            console.log(email);
+            console.log(hashedPassword);
+            console.log(hashedUsername);
   
-    if (emailExists && userExists) {
-      const client = await db.connect();
-          const hashedPassword = await bcrypt.hash(password, 10);
-          const hashedUsername = await bcrypt.hash(username, 10);
-  
-          return client.sql`
-          INSERT INTO users (id, name, email, password)
-          VALUES (${hashedUsername}, ${username}, ${email}, ${hashedPassword})
-          ON CONFLICT (id) DO NOTHING;
-        `;
+            return client.sql`
+            INSERT INTO users (id, name, email, password)
+            VALUES (${uuidv4()}, ${username}, ${email}, ${hashedPassword})
+            ON CONFLICT (id) DO NOTHING;
+          `;
+      }
     }
   }
-  
-}  
+
+  function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    .replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, 
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}

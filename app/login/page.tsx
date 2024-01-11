@@ -16,7 +16,7 @@ const LoginPage = () => {
                {signup ? <SignUpForm/> : <LoginForm/>}
                <button className="bg-slate-800 rounded-md p-2 hover:bg-slate-600" 
                onClick={() => setSignUp(!signup)}>
-                Sign Up
+                {signup ? "Login" : "Sign Up"}
             </button>
             </div>
         
